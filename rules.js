@@ -1,20 +1,19 @@
-export function determineWinner(playerMove, computerMove, moves) {
+export function determineWinner(userMoveIndex, computerMoveIndex, moves) {
   const totalMoves = moves.length;
-  const playerIndex = moves.indexOf(playerMove);
-  const computerIndex = moves.indexOf(computerMove);
+  const halfMoves = Math.floor(totalMoves / 2);
 
-  if (playerIndex === computerIndex) {
-    return `Draw!`;
+  if (userMoveIndex === computerMoveIndex) {
+    return "Draw"; 
   }
 
-  const halfCircles = Math.floor(totalMoves / 2);
   if (
-    (computerIndex > playerIndex &&
-      computerIndex - playerIndex <= halfCircles) ||
-    (computerIndex < playerIndex && playerIndex - computerIndex > halfCircles)
+    (userMoveIndex > computerMoveIndex &&
+      userMoveIndex - computerMoveIndex <= halfMoves) ||
+    (userMoveIndex < computerMoveIndex &&
+      computerMoveIndex - userMoveIndex > halfMoves)
   ) {
-    return `Yoe lose!`;
-  } else {
-    return `Yoe win!`;
+    return "Win"; 
   }
+
+  return "Lose"; 
 }

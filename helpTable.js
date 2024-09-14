@@ -1,23 +1,28 @@
-export function generateHelpTable(movesList) {
-  const totalMoves = movesList.length;
-  let table = "+-------------+";
-  const padding = 8;
+import Table from "cli-table3";
+import { determineWinner } from "./rules.js";
 
-  for (const move of movesList) {
-    table += ` ${move.padEnd(padding, " ")} +`;
-  }
-  table += "\n";
+export function displayHelpTable(moves) {
+  const headers = ["Your move \\ Opponent move", ...moves];
 
-  for (let i = 0; i < totalMoves; i++) {
-    table += `| ${movesList[i].padEnd(12, " ")} |`;
+  const MIN_COLUMN_WIDTH = 6;
 
-    for (let j = 0; j < totalMoves; j++) {
-      const result = i === j ? " Draw    " : determineWinner(movesList[i], movesList[j], movesList);
-      table += ` ${result.padEnd(padding, " ")} |`;
-    }
-    table += "\n";
-  }
+  const table = new Table({
+    head: headers,
+    colWidths: headers.map((header) =>
+      Math.max(header.length + 2, MIN_COLUMN_WIDTH)
+    ),
+  });
 
-  console.log(table);
+  moves.forEach((move, rowIndex) => {
+    const results = moves.map((_, colIndex) => {
+      if (rowIndex === colIndex) return "Draw";
+      return determineWinner(rowIndex, colIndex, moves) === "Win"
+        ? "Win"
+        : "Lose";
+    });
+    table.push([move, ...results]);
+  });
+
+  console.log("\nHelp: The table of who beats whom.");
+  console.log(table.toString());
 }
-
